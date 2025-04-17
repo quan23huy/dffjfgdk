@@ -4,8 +4,8 @@ Sub HighlightMatchingRows()
     Dim i As Long, j As Long
     Dim lastCol1 As Long
 
-    Set ws1 = ThisWorkbook.Sheets("Sheet1")
-    Set ws2 = ThisWorkbook.Sheets("Sheet2")
+    Set ws1 = ThisWorkbook.Worksheets(1)
+    Set ws2 = ThisWorkbook.Worksheets(2)
     
     lastRow1 = ws1.Cells(ws1.Rows.Count, 1).End(xlUp).Row
     lastRow2 = ws2.Cells(ws2.Rows.Count, 1).End(xlUp).Row
