@@ -37,7 +37,7 @@ Sub HighlightMatchingRows()
     End If
 
     ' Clear previous highlights (only over actual data range)
-    ws1.Range(ws1.Cells(2, 1), ws1.Cells(lastRow1, lastCol1)).Interior.ColorIndex = xlNone
+    ' ws1.Range(ws1.Cells(2, 1), ws1.Cells(lastRow1, lastCol1)).Interior.ColorIndex = xlNone
 
     ' Match rows
     For i = 2 To lastRow1
