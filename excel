@@ -1,0 +1,57 @@
+Sub HighlightMatchingRows()
+    Dim ws1 As Worksheet, ws2 As Worksheet
+    Dim lastRow1 As Long, lastRow2 As Long
+    Dim i As Long, j As Long
+    Dim lastCol1 As Long
+
+    Set ws1 = ThisWorkbook.Sheets("Sheet1")
+    Set ws2 = ThisWorkbook.Sheets("Sheet2")
+    
+    lastRow1 = ws1.Cells(ws1.Rows.Count, 1).End(xlUp).Row
+    lastRow2 = ws2.Cells(ws2.Rows.Count, 1).End(xlUp).Row
+    lastCol1 = ws1.Cells(1, ws1.Columns.Count).End(xlToLeft).Column
+
+    ' Get header positions dynamically
+    Dim h1 As Range, h2 As Range
+    Set h1 = ws1.Rows(1)
+    Set h2 = ws2.Rows(1)
+
+    Dim idxDate1, idxDesc1, idxIn1, idxOut1, idxAcc1
+    Dim idxDate2, idxDesc2, idxAmt2, idxAcc2
+
+    idxDate1 = Application.Match("Transaction Date", h1, 0)
+    idxDesc1 = Application.Match("Transaction Description", h1, 0)
+    idxIn1 = Application.Match("Amount In", h1, 0)
+    idxOut1 = Application.Match("Amount Out", h1, 0)
+    idxAcc1 = Application.Match("Account Number", h1, 0)
+
+    idxDate2 = Application.Match("Transaction Date", h2, 0)
+    idxDesc2 = Application.Match("Transaction Description", h2, 0)
+    idxAmt2 = Application.Match("Total Amount", h2, 0)
+    idxAcc2 = Application.Match("Account Number", h2, 0)
+
+    If IsError(idxDate1) Or IsError(idxDesc1) Or IsError(idxIn1) Or IsError(idxOut1) Or IsError(idxAcc1) _
+    Or IsError(idxDate2) Or IsError(idxDesc2) Or IsError(idxAmt2) Or IsError(idxAcc2) Then
+        MsgBox "One or more required columns are missing!"
+        Exit Sub
+    End If
+
+    ' Clear previous highlights (only over actual data range)
+    ws1.Range(ws1.Cells(2, 1), ws1.Cells(lastRow1, lastCol1)).Interior.ColorIndex = xlNone
+
+    ' Match rows
+    For i = 2 To lastRow1
+        For j = 2 To lastRow2
+            If ws1.Cells(i, idxAcc1).Value = ws2.Cells(j, idxAcc2).Value And _
+               ws1.Cells(i, idxDate1).Value = ws2.Cells(j, idxDate2).Value And _
+               ws1.Cells(i, idxDesc1).Value = ws2.Cells(j, idxDesc2).Value And _
+               (ws1.Cells(i, idxIn1).Value = ws2.Cells(j, idxAmt2).Value Or _
+                ws1.Cells(i, idxOut1).Value = ws2.Cells(j, idxAmt2).Value) Then
+
+                ' Only highlight up to last used column
+                ws1.Range(ws1.Cells(i, 1), ws1.Cells(i, lastCol1)).Interior.Color = RGB(198, 239, 206)
+                Exit For
+            End If
+        Next j
+    Next i
+End Sub
